@@ -112,7 +112,7 @@ module.exports.deleteUser = async (req, res, next) => {
 
 module.exports.getAllUser = async (req,res,next) =>{
   UserModel.findAll({
-    include: [Post,Reaction],
+    include: [Post,Reactions],
   })
   .then((users) => res.status(200).json(users))
   .catch((error) => res.status(500).json({ error }));

@@ -4,7 +4,7 @@ const db = require('../config/db');
 
 
     const Post = db.define(
-      "post",
+      "Post",
       {
         content: {
             type: DataTypes.STRING,

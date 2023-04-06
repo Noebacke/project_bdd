@@ -1,11 +1,11 @@
 const Post = require("../models/post");
 const User = require('../models/user');
-const Reaction = require('../models/reaction')
-const createReactionForPost = require('./reaction.controller/createReaction')
+const Reactions = require('../models/Reaction')
+const createReactionsForPost = require('./Reactions.controller/createReactions')
 
 module.exports.getAllPosts = async (req, res, next) => {
     await Post.findAll({
-      include: [ Reaction, User ],
+      include: [ Reactions, User ],
     })
       .then((posts) => res.status(200).json(posts))
       .catch((error) => res.status(500).json({ error }));
@@ -52,7 +52,7 @@ module.exports.createPost = async (req, res, next) => {
         user_id: userId,
     });
 
-    const createdReaction = await Reaction.create({
+    await Reactions.create({
         user_id: req.auth,
         post_id: createdPost.id,
         likes: 0,
@@ -60,7 +60,7 @@ module.exports.createPost = async (req, res, next) => {
         user_react: [],
     });
 
-    console.log(createdPost, createdReaction);
+    console.log(createdPost, createdReactions);
     createdPost.save()
       .then(() => res.status(201).json({ message : "Le post a été ajouté" }))
       .catch((error) => res.status(404).json({ message : "Il y a eu une erreur suite à la création du post" }));

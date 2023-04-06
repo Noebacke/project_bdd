@@ -3,8 +3,8 @@ const { DataTypes } = require('sequelize');
 const db = require('../config/db');
 
 
-    const Reaction = db.define(
-      "reaction",
+    const Reactions = db.define(
+      "Reactions",
       {
         user_id: {
             type: DataTypes.INTEGER,
@@ -30,4 +30,4 @@ const db = require('../config/db');
       {}
     );
 
-module.exports = Reaction
+module.exports = Reactions
