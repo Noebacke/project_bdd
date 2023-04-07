@@ -4,9 +4,6 @@ const User = require('../models/user');
 
 module.exports.getAllReactionss = async (req, res, next) => {
     try {
-        //await Reactions.findAll({
-        //    include: [ Post, User ],
-        //  })
         const reactions = await Reactions.findAll()
         res.status(200).json(reactions)
         return reactions
@@ -16,12 +13,14 @@ module.exports.getAllReactionss = async (req, res, next) => {
     }
 };
 
-module.exports.deleteReactions = async ( req, res, next) => {
-    const Reactions = await Reactions.findOne({where: { id: req.params.id} });
-    await Reactions.destroy({where : {id: req.params.id}})
-      .then(() => res.status(200).json({ message: "Reactions supprimée" }))
-      .catch((error) => res.status(404).json({ error }));
-};
+// module.exports.deleteReactions = async ( req, res, next) => {
+//     const users  = await User.findOne({where: { id: req.params.userId}})
+//     const posts  = await Post.findOne({where: { id: req.params.postId}})
+//     const reactions = await Reactions.findOne({where: { id: req.params.id} });
+//     await Reactions.destroy(reactions)
+//       .then(() => res.status(200).json({ message: "Reactions supprimée" }))
+//       .catch((error) => res.status(404).json({ error }));
+// };
 
 module.exports.createReactions = async (req, res, next) => {
 

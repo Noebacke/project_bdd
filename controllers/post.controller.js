@@ -4,15 +4,12 @@ const Reactions = require('../models/Reaction')
 
 module.exports.getAllPosts = async (req, res, next) => {
     try {
-        //const posts  = await Post.findAll({
-        //    include: [ Reactions, User ],
-        //  })
-        const posts  = await Post.findAll()
+        const posts  = await Post.findAll({include: [ "reactions" ]})
         res.status(200).json(posts)
         return posts
     }
-    catch {
-        res.status(500).json({ error })
+    catch(err) {
+        res.status(500).json({ err })
     }
 };
 

@@ -15,7 +15,7 @@ const db = require('../config/db');
             allowNull: false,
         },
       },
-      {}
+      {underscored: true, timestamps: false}
     );
 
 module.exports = Post

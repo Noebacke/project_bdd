@@ -19,7 +19,7 @@ const db = require('../config/db');
             required: true 
         }
       },
-      {}
+      {underscored: true, timestamps: false}
     );
 
 module.exports = Reactions

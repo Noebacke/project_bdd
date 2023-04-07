@@ -21,7 +21,7 @@ const db = require('../config/db');
     last_name: {
         type: DataTypes.STRING(50),
     }
-  }, {    
-  });
+  }, {underscored: true, timestamps: false}
+  );
 
 module.exports = User;
