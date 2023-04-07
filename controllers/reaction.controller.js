@@ -30,23 +30,24 @@ module.exports.deleteReactions = async ( req, res, next) => {
       .catch((error) => res.status(404).json({ error }));
 };
 
-// module.exports.createReactions = async (req, res, next) => {
+module.exports.createReactions = async (req, res, next) => {
+
+
     
-//     const createReactions = await Reactions.create({
-//         ... req.body,
-//         user_id: req.auth,
-//         post_id: req.body.postId,
-//         likes: 0,
-//         dislikes: 0,
-//         user_react: [],
-//     });
+    const createReactions = await Reactions.create({
+        ... req.body,
+        user_id: req.auth,
+        post_id: req.body.postId,
+        type: req.body.content,
+        user_react: req.auth,
+    });
   
-//     console.log(createReactions);
-//     createReactions
-//       .save()
-//       .then(() => res.status(201).json({ message : "La Reactions a été ajoutée" }))
-//       .catch((error) => res.status(404).json({ error }));
-// }
+    console.log(createReactions);
+    createReactions
+      .save()
+      .then(() => res.status(201).json({ message : "La Reactions a été ajoutée" }))
+      .catch((error) => res.status(404).json({ error }));
+}
 
 exports.likeReact = (req, res, next) => {
     let like = req.body.likes;

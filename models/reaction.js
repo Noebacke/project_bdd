@@ -4,7 +4,7 @@ const db = require('../config/db');
 
 
     const Reactions = db.define(
-      "Reactions",
+      "reactions",
       {
         user_id: {
             type: DataTypes.INTEGER,
@@ -14,18 +14,10 @@ const db = require('../config/db');
             type: DataTypes.INTEGER,
             allowNull: false
         },
-        likes: { 
-            type: DataTypes.NUMBER, 
+        content: { 
+            type: DataTypes.STRING(10), 
             required: true 
-        },
-        dislikes: { 
-            type: DataTypes.NUMBER, 
-            required: true,
-        },
-        usersReact: { 
-            type: [DataTypes.STRING], 
-            required: true 
-        },
+        }
       },
       {}
     );

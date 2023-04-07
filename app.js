@@ -3,12 +3,11 @@ const cookieParser = require("cookie-parser");
 const app = express();
 const db = require('./config/db')
 const helmet = require("helmet");
+const faker = require('@faker-js/faker');
 const User = require('./models/user');
 const Post = require('./models/post');
-const Reactions = require('./models/reaction');
-const faker = require('faker');
+const Reaction = require('./models/reaction');
 const bcrypt = require('bcrypt');
-const sequelize = require('./db');
 
 
 //Se connecter à la base de donnée choisie
@@ -21,12 +20,12 @@ try {
 
 //Associations
 
-Post.hasMany(Reactions)
-Reactions.belongsTo(Post)
+Post.hasMany(Reaction)
+Reaction.belongsTo(Post)
 User.hasMany(Post)
 Post.belongsTo(User)
-Reactions.belongsTo(User)
-User.hasMany(Reactions)
+Reaction.belongsTo(User)
+User.hasMany(Reaction)
 
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin',  `${process.env.CLIENT_URL}`);
@@ -42,74 +41,43 @@ app.use(cookieParser());
 
 const initApp = async function (){
     await db.sync()
-    // Générer les 1500 utilisateurs
-    const users = Array.from({ length: 1500 }, () => {
-        const email = faker.internet.email();
-        const password = faker.internet.password();
-        const user_name = faker.internet.userName();
-        const last_name = faker.name.lastName();
-    
+     // create users
+     const users = Array.from({ length: 1500 }, () => {
         return {
-        email,
-        password: bcrypt.hashSync(password, 10), // hashage du password
-        user_name,
-        last_name,
+            email: faker.internet.email(),
+            password: faker.internet.password(),
+            user_name: faker.internet.userName(),
+            last_name: faker.name.lastName()
         };
     });
-    
-    // Créer les utilisateurs en base de données
-    (async () => {
-        try {
-        await sequelize.authenticate();
-        console.log('Connection has been established successfully.');
-    
-        // Synchroniser les modèles avec la base de données
-        await sequelize.sync({ force: true });
-        console.log('All models were synchronized successfully.');
-    
-        // Créer les utilisateurs et les posts associés
-        await User.bulkCreate(users, { returning: true })
-            .then(async (users) => {
-            const posts = await Promise.all(
-                users.map((user) => {
-                return Post.bulkCreate(
-                    Array.from({ length: 10 }, () => {
-                    return {
-                        content: faker.lorem.sentence(),
-                        user_id: user.id,
-                    };
-                    }),
-                    { returning: true }
-                );
-                })
-            );
-    
-            // Créer les reactions associées aux posts
-            await Promise.all(
-                posts.map((userPosts) => {
-                return Reactions.create({
-                    likes: Array.from({ length: 10 }, () =>
-                    faker.random.boolean()
-                    ).filter((bool) => bool === true).length,
-                    dislikes: Array.from({ length: 10 }, () =>
-                    faker.random.boolean()
-                    ).filter((bool) => bool === true).length,
-                    usersReact: [],
-                    post_id: userPosts[0].id,
-                });
-                })
-            );
-    
-            console.log('Users, Posts and Reactions have been created successfully.');
-            });
-        } catch (error) {
-        console.error('Unable to connect to the database:', error);
-        } finally {
-        await sequelize.close();
-        console.log('Connection has been closed.');
-        }
-    })();
-} 
+    const createdUsers = await User.bulkCreate(users, { returning: true });
+    console.log(`Created ${createdUsers.length} users.`);
+
+    // create posts for each user
+    const posts = createdUsers.flatMap((user) =>
+        Array.from({ length: 10 }, () => {
+            return {
+                content: faker.lorem.sentence(),
+                user_id: user.id
+            };
+        })
+    );
+    const createdPosts = await Post.bulkCreate(posts, { returning: true });
+    console.log(`Created ${createdPosts.length} posts.`);
+
+    // create reactions for each post
+    const reactions = createdPosts.flatMap((post) =>
+        Array.from({ length: 10 }, () => {
+            return {
+                content: faker.lorem.word(),
+                post_id: post.id,
+                user_id: createdUsers.find((user) => user.id !== post.user_id).id
+            };
+        })
+    );
+    const createdReactions = await Reaction.bulkCreate(reactions, { returning: true });
+    console.log(`Created ${createdReactions.length} reactions.`);
+}
 
 initApp();
 module.exports = app;

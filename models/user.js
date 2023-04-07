@@ -4,22 +4,22 @@ const db = require('../config/db');
 
 
   const User = db.define(
-    'User', {
+    'user', {
 
     email: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(50),
         unique: true,
         allowNull: false
     },
     password: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(50),
         allowNull: false
     },
     user_name: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(50),
     },
     last_name: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(50),
     }
   }, {    
   });

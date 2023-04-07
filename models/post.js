@@ -4,10 +4,10 @@ const db = require('../config/db');
 
 
     const Post = db.define(
-      "Post",
+      "post",
       {
         content: {
-            type: DataTypes.STRING,
+            type: DataTypes.CHAR(150),
             allowNull: false,
         },
         user_id: {
