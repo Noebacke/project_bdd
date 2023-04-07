@@ -1,10 +1,9 @@
 const express= require('express');
 const router = express.Router();
-const ReactionsCtrl = require('../controllers/Reactions.controller');
-const auth = require('../middleware/auth');
+const ReactionsCtrl = require('../controllers/reaction.controller');
 
-router.get("/",auth,ReactionsCtrl.getAllReactionss);
-router.post('/:id/like', auth,ReactionsCtrl.likeReact);
-router.delete("/:id",auth,ReactionsCtrl.deleteReactions);
+router.get("/",ReactionsCtrl.getAllReactionss);
+router.post('/:userId/:postId',ReactionsCtrl.createReactions);
+
 
 module.exports = router

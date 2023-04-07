@@ -7,7 +7,9 @@ const { faker } = require('@faker-js/faker');
 const User = require('./models/user');
 const Post = require('./models/post');
 const Reaction = require('./models/reaction');
-const bcrypt = require('bcrypt');
+const postRoutes = require("./routes/post.routes");
+const reactionRoutes = require("./routes/reaction.routes");
+const userRoutes = require('./routes/user.routes');
 
 
 //Se connecter à la base de donnée choisie
@@ -34,10 +36,14 @@ app.use((req, res, next) => {
     next();
 });
 
-
 app.use(helmet());
 app.use(express.json());
 app.use(cookieParser());
+
+//routes
+app.use("/api/post", postRoutes);
+app.use("/api/reaction", reactionRoutes);
+app.use("/api/user" , userRoutes);
 
 const initApp = async function (){
     await db.sync()
