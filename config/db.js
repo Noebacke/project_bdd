@@ -4,7 +4,6 @@ const db = {};
 const sequelize = new Sequelize("project_bdd","root",process.env.PMYSQL,{
     dialect: "mysql",
     host:"localhost",
-    
 });
 
 

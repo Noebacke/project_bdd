@@ -4,8 +4,8 @@ const password = require('../middleware/password');
 const auth = require('../middleware/auth');
 
 //auth
-router.post('/signup',password,userController.signUp);
-router.post('/login', userController.login);
+router.post('/signup',userController.signUp);
+router.post('/login',password,userController.login);
 
 //Profil-Page
 router.put('/update', auth,userController.updateUser);
